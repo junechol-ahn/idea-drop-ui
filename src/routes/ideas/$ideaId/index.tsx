@@ -12,6 +12,7 @@ const ideaQueryOptions = (ideaId: string) =>
 	queryOptions({
 		queryKey: ["idea", ideaId],
 		queryFn: () => fetchIdea(ideaId),
+    staleTime: "static",
 	});
 
 export const Route = createFileRoute("/ideas/$ideaId/")({
@@ -19,7 +20,6 @@ export const Route = createFileRoute("/ideas/$ideaId/")({
 	loader: async ({ params, context: { queryClient } }) => {
 		return queryClient.query({
 			...ideaQueryOptions(params.ideaId),
-			staleTime: "static",
 		});
 	},
 });
