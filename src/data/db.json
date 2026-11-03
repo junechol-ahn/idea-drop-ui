@@ -73,38 +73,22 @@
       "createdAt": "2025-04-24T13:10:00.000Z"
     },
     {
-      "title": "Dynamic Data Designer",
-      "description": "Cohors architecto et canis cotidie tutis.",
-      "summary": "Demergo magni tactus claudeo tersus patior.",
+      "title": "Direct Markets Executive",
+      "summary": "Aqua argumentum viriliter combibo cupressus surgo adversus.",
+      "description": "Quaerat sunt suus somniculosus cornu umerus conatus angulus.",
       "tags": [
-        "Tutis adamo terreo."
+        "Usque sum ulterius exercitationem sursum sequi demitto tot venio."
       ],
-      "createdAt": "2026-11-01T17:14:14.849Z",
       "id": "qGbeEREsZNI"
     },
     {
-      "title": "Human Web Planner",
-      "description": "Stipes arto temporibus cruciamentum.",
-      "summary": "Architecto stella adipisci speciosus comedo conqueror supplanto similique adopto arbor.",
+      "title": "International Paradigm Analyst",
+      "summary": "Coepi angulus depulso thesaurus titulus thymbra voluptates damnatio dolorum.",
+      "description": "Tepidus clam suffragium denuo utroque coruscus amet.",
       "tags": [
-        "xml",
-        "web",
-        "react",
-        "vue",
-        "next"
+        "Ullus aperio conculco peior supellex."
       ],
-      "createdAt": "2026-11-01T17:15:09.739Z",
-      "id": "ZRPvdqySuiU"
-    },
-    {
-      "title": "Future Integration Orchestrator",
-      "description": "Aut vulgus volva.",
-      "summary": "Antepono dens vado defaeco clibanus.",
-      "tags": [
-        "Audio bibo vigor solium vitae viscus vapulus tamquam balbus."
-      ],
-      "createdAt": "2026-11-01T17:18:34.762Z",
-      "id": "FYKlNRF0wQ8"
+      "id": "KYgCMWdQRhc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

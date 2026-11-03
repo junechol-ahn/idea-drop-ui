@@ -1,9 +1,9 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Lightbulb } from 'lucide-react'
+import IdeaCard from '#/components/IdeaCard'
 import api from '#/lib/axios'
 import type { Idea } from '#/types'
-import IdeaCard from '#/components/IdeaCard'
 
 const ideasQueryOptions = queryOptions({
 	queryKey: ['ideas'],
@@ -49,7 +49,7 @@ function Home() {
 				</h2>
 				<div className="space-y-6">
 					{latestIdeas.map((idea) => (
-						<IdeaCard key={idea.id} button={false} idea={idea}/>
+						<IdeaCard key={idea.id} button={false} idea={idea} />
 					))}
 				</div>
 

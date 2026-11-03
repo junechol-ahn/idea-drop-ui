@@ -11,10 +11,21 @@ export const fetchIdea = async (ideaId: string) => {
 	return res.data
 }
 
-export const createIdea = async (newIdea: Omit<Idea, 'id'|'createdAt'|'user' > ) => {
+export const createIdea = async (
+	newIdea: Omit<Idea, 'id' | 'createdAt' | 'user'>,
+) => {
 	const res = await api.post<Idea>('/ideas', {
 		...newIdea,
-		createdAt: new Date().toISOString()
+		createdAt: new Date().toISOString(),
 	})
+	return res.data
+}
+
+export const deleteIdea = async (ideaId: string) => {
+	await api.delete<Idea>(`/ideas/${ideaId}`)
+}
+
+export const updateIdea = async (ideaId: string, updatedData: Omit<Idea, 'id' | 'createdAt' | 'user'>) => {
+	const res = await api.put<Idea>(`/ideas/${ideaId}`, updatedData)
 	return res.data
 }

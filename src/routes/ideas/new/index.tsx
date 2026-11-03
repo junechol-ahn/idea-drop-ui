@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
 import type { SubmitEvent } from 'react'
+import { useState } from 'react'
 import { createIdea } from '#/api/ideas'
-import type { Idea } from '#/types'
 
 export const Route = createFileRoute('/ideas/new/')({
 	component: NewIdeaPage,
@@ -14,7 +13,7 @@ function NewIdeaPage() {
 	const [title, setTitle] = useState('')
 	const [summary, setSummary] = useState('')
 	const [description, setDescription] = useState('')
-	const [tagInput, setTagInput] = useState('')
+	const [tagsInput, setTagsInput] = useState('')
 
 	const { mutateAsync, isPending } = useMutation({
 		mutationFn: createIdea,
@@ -36,7 +35,7 @@ function NewIdeaPage() {
 				title,
 				description,
 				summary,
-				tags: tagInput
+				tags: tagsInput
 					.split(',')
 					.map((tag) => tag.trim())
 					.filter((tag) => tag !== ''),
@@ -49,6 +48,9 @@ function NewIdeaPage() {
 
 	return (
 		<div className="">
+			<div className="flex justify-between items-center mb-4">
+				<h1 className="text-2xl font-bold">Create New Idea</h1>
+			</div>
 			<form className="space-y-4" onSubmit={handleSubmit}>
 				<div>
 					<label
@@ -105,8 +107,8 @@ function NewIdeaPage() {
 					<input
 						id="tag"
 						type="text"
-						value={tagInput}
-						onChange={(e) => setTagInput(e.target.value)}
+						value={tagsInput}
+						onChange={(e) => setTagsInput(e.target.value)}
 						className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						placeholder="optional tags, comma separated"
 					/>
