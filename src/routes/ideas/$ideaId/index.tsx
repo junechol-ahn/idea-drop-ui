@@ -1,32 +1,26 @@
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import api from "#/lib/axios";
-import type { Idea } from "#/types";
-
-const fetchIdea = async (ideaId: string): Promise<Idea> => {
-	const res = await api.get(`/ideas/${ideaId}`);
-	return res.data;
-};
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { fetchIdea } from '#/api/ideas'
 
 const ideaQueryOptions = (ideaId: string) =>
 	queryOptions({
-		queryKey: ["idea", ideaId],
+		queryKey: ['idea', ideaId],
 		queryFn: () => fetchIdea(ideaId),
-    staleTime: "static",
-	});
+		staleTime: 'static',
+	})
 
-export const Route = createFileRoute("/ideas/$ideaId/")({
+export const Route = createFileRoute('/ideas/$ideaId/')({
 	component: IdeaDetailPage,
 	loader: async ({ params, context: { queryClient } }) => {
 		return queryClient.query({
 			...ideaQueryOptions(params.ideaId),
-		});
+		})
 	},
-});
+})
 
 function IdeaDetailPage() {
-	const { ideaId } = Route.useParams();
-	const { data: idea } = useSuspenseQuery(ideaQueryOptions(ideaId));
+	const { ideaId } = Route.useParams()
+	const { data: idea } = useSuspenseQuery(ideaQueryOptions(ideaId))
 
 	return (
 		<div className="p-4">
@@ -36,5 +30,5 @@ function IdeaDetailPage() {
 			<h2 className="text-2xl font-bold">{idea.title}</h2>
 			<p className="mt-2">{idea.description}</p>
 		</div>
-	);
+	)
 }

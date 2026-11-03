@@ -1,45 +1,48 @@
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import api from "#/lib/axios";
-import type { Idea } from "#/types";
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { fetchIdeas } from '#/api/ideas'
+import IdeaCard from '#/components/IdeaCard'
+import type { Idea } from '#/types'
 
 const ideasQueryOptions = queryOptions({
-	queryKey: ["ideas"],
-	queryFn: async () => {
-		const res = await api.get<Idea[]>("/ideas");
-		return res.data;
-	},
-});
+	queryKey: ['ideas'],
+	staleTime: 30_000,
+	queryFn: fetchIdeas,
+})
 
-export const Route = createFileRoute("/ideas/")({
+export const Route = createFileRoute('/ideas/')({
 	head: () => ({
 		meta: [
 			{
-				title: "IdeaHub - Browse Ideas",
+				title: 'IdeaHub - Browse Ideas',
 			},
 		],
 	}),
 	component: IdeasPage,
 	loader: async ({ context: { queryClient } }) => {
-		return queryClient.query({ ...ideasQueryOptions });
+		return queryClient.query(ideasQueryOptions)
 	},
-});
+})
 
 function IdeasPage() {
-	const { data: ideas } = useSuspenseQuery(ideasQueryOptions);
+	const { data } = useSuspenseQuery(ideasQueryOptions)
+	const ideas = data.sort((a:Idea,b:Idea)=>{
+		const timeA = new Date(a.createdAt).getTime()
+		const timeB = new Date(b.createdAt).getTime()
+		return timeB - timeA
+	})
+	if (ideas.length === 0) {
+		return <p>등록된 아이디어가 없습니다.</p>
+	}
+
 	return (
-		<ul className="list-disc pl-6">
-			{ideas.map((idea) => (
-				<li key={idea.id}>
-					<Link
-						to="/ideas/$ideaId"
-						params={{ ideaId: idea.id }}
-						className="text-blue-500 underline"
-					>
-						{idea.title}
-					</Link>
-				</li>
-			))}
-		</ul>
-	);
+		<div className="p-4">
+			<h1 className="text-2xl font-bold mb-4">Ideas</h1>
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+				{ideas.map((idea) => (
+					<IdeaCard key={idea.id} idea={idea} />
+				))}
+			</div>
+		</div>
+	)
 }
