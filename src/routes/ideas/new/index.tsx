@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { SubmitEvent } from 'react'
 import { useState } from 'react'
@@ -15,10 +15,13 @@ function NewIdeaPage() {
 	const [description, setDescription] = useState('')
 	const [tagsInput, setTagsInput] = useState('')
 
+	const queryClient = useQueryClient()
+	
 	const { mutateAsync, isPending } = useMutation({
 		mutationFn: createIdea,
-		onSuccess: () => {
-			navigate({ to: '/ideas' })
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: ['ideas'] })
+			await navigate({ to: '/ideas' })
 		},
 	})
 

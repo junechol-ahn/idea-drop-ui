@@ -1,4 +1,10 @@
-import axios from "axios";
+import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
+import { getStoredAccessToken, setStoredAccessToken } from "./authToken";
+import { refreshAccessToken } from "#/api/auth"
+
+type RetryableRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
 
 const api = axios.create({
   baseURL: '/api',
@@ -6,6 +12,47 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   }
+})
+
+// attach token on refresh
+api.interceptors.request.use((config)=>{
+  const token = getStoredAccessToken()
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
+})
+
+// refresh token after expire
+api.interceptors.response.use((res)=>res, async (error) =>{
+  if (error instanceof AxiosError) {
+
+    const originalRequest = error.config as RetryableRequestConfig | undefined
+    // const response = error.response
+  
+    // console.log(originalRequest)
+    // console.log('\n\n\n')
+    // console.log(response)
+    if (originalRequest 
+        && error.response?.status === 401
+        && !originalRequest._retry
+        && !originalRequest.url?.includes('/auth/refresh')
+      ) {
+      originalRequest._retry = true
+
+      try {
+        const {accessToken: newToken} = await refreshAccessToken()
+        setStoredAccessToken(newToken)
+        originalRequest.headers.Authorization = `Bearer ${newToken}`
+        return api(originalRequest)
+      } catch (err) {
+        console.error('Refresh token failed', err)
+      }
+    }
+  }
+
+  return Promise.reject(error)
 })
 
 export default api

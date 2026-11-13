@@ -1,7 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "@tanstack/react-router";
-import ReactDOM from "react-dom/client";
-import { getRouter } from "./router";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { RouterProvider } from '@tanstack/react-router'
+import ReactDOM from 'react-dom/client'
+import { AuthProvider } from './context/AuthContext'
+import { getRouter } from './router'
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -9,21 +10,23 @@ const queryClient = new QueryClient({
 			retry: false,
 		},
 	},
-});
+})
 
-const router = getRouter(queryClient);
+const router = getRouter(queryClient)
 
-const rootElement = document.getElementById("app");
+const rootElement = document.getElementById('app')
 
 if (!rootElement) {
-	throw new Error('Root element "app" was not found');
+	throw new Error('Root element "app" was not found')
 }
 
 if (!rootElement.innerHTML) {
-	const root = ReactDOM.createRoot(rootElement);
+	const root = ReactDOM.createRoot(rootElement)
 	root.render(
-		<QueryClientProvider client={queryClient}>
-			<RouterProvider router={router} />
-		</QueryClientProvider>,
-	);
+		<AuthProvider>
+			<QueryClientProvider client={queryClient}>
+				<RouterProvider router={router} />
+			</QueryClientProvider>
+		</AuthProvider>
+	)
 }

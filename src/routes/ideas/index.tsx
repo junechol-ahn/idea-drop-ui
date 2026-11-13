@@ -7,7 +7,7 @@ import type { Idea } from '#/types'
 const ideasQueryOptions = queryOptions({
 	queryKey: ['ideas'],
 	staleTime: 30_000,
-	queryFn: fetchIdeas,
+	queryFn: ()=>fetchIdeas(),
 })
 
 export const Route = createFileRoute('/ideas/')({
@@ -25,12 +25,12 @@ export const Route = createFileRoute('/ideas/')({
 })
 
 function IdeasPage() {
-	const { data } = useSuspenseQuery(ideasQueryOptions)
-	const ideas = data.sort((a:Idea,b:Idea)=>{
-		const timeA = new Date(a.createdAt).getTime()
-		const timeB = new Date(b.createdAt).getTime()
-		return timeB - timeA
-	})
+	const { data: ideas } = useSuspenseQuery(ideasQueryOptions)
+	// const ideas = data.sort((a:Idea,b:Idea)=>{
+	// 	const timeA = new Date(a.createdAt).getTime()
+	// 	const timeB = new Date(b.createdAt).getTime()
+	// 	return timeB - timeA
+	// })
 	if (ideas.length === 0) {
 		return <p>등록된 아이디어가 없습니다.</p>
 	}
@@ -40,7 +40,7 @@ function IdeasPage() {
 			<h1 className="text-2xl font-bold mb-4">Ideas</h1>
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 				{ideas.map((idea) => (
-					<IdeaCard key={idea.id} idea={idea} />
+					<IdeaCard key={idea._id} idea={idea} />
 				))}
 			</div>
 		</div>

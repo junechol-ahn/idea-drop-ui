@@ -2,6 +2,7 @@ import {
 	QueryClient,
 	queryOptions,
 	useMutation,
+	useQueryClient,
 	useSuspenseQuery,
 } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
@@ -32,6 +33,8 @@ function IdeaEditPage() {
 	const [description, setDescription] = useState(idea.description)
 	const [tagsInput, setTagsInput] = useState(idea.tags.join(', '))
 
+	const queryClient = useQueryClient()
+
   const { mutateAsync, isPending} = useMutation({
     mutationFn: ()=>updateIdea(ideaId, {
       title,
@@ -39,8 +42,10 @@ function IdeaEditPage() {
       description,
       tags: tagsInput.split(',').map(t=>t.trim()).filter(Boolean)
     }),
-    onSuccess: ()=>{
-      navigate({to: '/ideas/$ideaId', params: {ideaId}})
+    onSuccess: async ()=>{
+			await queryClient.invalidateQueries({ queryKey: ['ideas'] })
+			await queryClient.invalidateQueries({ queryKey: ['idea', ideaId] })
+      await navigate({to: '/ideas/$ideaId', params: {ideaId}})
     }
   })
 

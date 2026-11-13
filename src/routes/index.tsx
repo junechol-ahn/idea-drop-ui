@@ -4,14 +4,16 @@ import { Lightbulb } from 'lucide-react'
 import IdeaCard from '#/components/IdeaCard'
 import api from '#/lib/axios'
 import type { Idea } from '#/types'
+import { fetchIdeas } from '#/api/ideas'
 
 const ideasQueryOptions = queryOptions({
-	queryKey: ['ideas'],
+	queryKey: ['ideas', {limit:3}],
 	staleTime: 30_000,
-	queryFn: async () => {
-		const res = await api.get<Idea[]>('/ideas')
-		return res.data
-	},
+	// queryFn: async () => {
+	// 	const res = await api.get<Idea[]>('/ideas')
+	// 	return res.data,
+	//},
+	queryFn: () => fetchIdeas(3)
 })
 
 export const Route = createFileRoute('/')({
@@ -23,13 +25,13 @@ export const Route = createFileRoute('/')({
 
 function Home() {
 	const { data: ideas } = useSuspenseQuery(ideasQueryOptions)
-	const latestIdeas = [...ideas]
-		.sort((a: Idea, b: Idea) => {
-			const aTimestamp = new Date(a.createdAt).getTime()
-			const bTimestamp = new Date(b.createdAt).getTime()
-			return bTimestamp - aTimestamp
-		})
-		.slice(0, 3)
+	// const latestIdeas = [...ideas]
+	// 	.sort((a: Idea, b: Idea) => {
+	// 		const aTimestamp = new Date(a.createdAt).getTime()
+	// 		const bTimestamp = new Date(b.createdAt).getTime()
+	// 		return bTimestamp - aTimestamp
+	// 	})
+	// 	.slice(0, 3)
 
 	return (
 		<div className="flex flex-col md:flex-row items-start justify-between gap-10 p-6 text-blue-600">
@@ -48,8 +50,8 @@ function Home() {
 					Latest Ideas
 				</h2>
 				<div className="space-y-6">
-					{latestIdeas.map((idea) => (
-						<IdeaCard key={idea.id} button={false} idea={idea} />
+					{ideas.map((idea) => (
+						<IdeaCard key={idea._id} button={false} idea={idea} />
 					))}
 				</div>
 
