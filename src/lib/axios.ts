@@ -7,7 +7,7 @@ type RetryableRequestConfig = InternalAxiosRequestConfig & {
 };
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: `${import.meta.env.VITE_PRODUCTION_API_URL}/api`,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
